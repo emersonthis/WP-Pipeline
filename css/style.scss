@@ -1,0 +1,26 @@
+.issues-list .issue__title,
+.milestones-list .milestone__title {
+	margin-bottom:0;
+}
+
+.issue__label {
+	padding:0 .5em .25em;
+}
+
+.issue__details,
+.milestone__details {
+	margin-top:0;
+	list-style:none;
+	padding-left:0;
+}
+
+.milestone__issue-item {
+	 &.open {
+	 	// color:#0F0;
+	 }
+
+	 &.closed {
+	 	// color: #F00;
+	 	text-decoration:line-through;
+	 }
+}
