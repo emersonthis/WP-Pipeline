@@ -1,3 +1,5 @@
+## Requirements
+* PHP 5.5+
 
 ## TODO:
 * Make gitHub credentials dynamic
