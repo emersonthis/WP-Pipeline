@@ -149,7 +149,7 @@ function searchform_func( $atts ) {
 		} else {
 
 			$gh = new Github();
-			$issues = $gh->search_issues(['term'=>$_POST['gh_searchterm']]);
+			$issues = $gh->search_issues(array('term'=>$_POST['gh_searchterm']));
 			$results = count($issues);
 			$msg = "Results: " . $results;
 

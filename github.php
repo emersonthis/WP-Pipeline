@@ -30,16 +30,16 @@ class Github {
 
 	}
 
-	public function get_issues($options=[]) {
+	public function get_issues($options=array()) {
 
 		//TODO: Check for repo!
 		//$this->_check_for_repo();
 
-		$default_options = [
+		$default_options = array(
 							'labels'=>'', 
 							'state'=>'all',
 							'page' => 1
-							];
+							);
 
 		$params = array_merge($default_options, $options);
 
@@ -53,13 +53,13 @@ class Github {
 		return $issues;
 	}
 
-	public function search_issues($options=[]) {
+	public function search_issues($options=array()) {
 
-		$default_options = [
+		$default_options = array(
 							// 'labels'=>'',
 							'term' => '', 
 							'state'=>'all',
-							];
+							);
 		
 		$params = array_merge($default_options, $options);
 		$state = $params['state'];
@@ -82,7 +82,7 @@ class Github {
 		$labels_list = $this->client->api('issue')->labels()->all($this->org, $this->repo);
 		// error_log(json_encode($labels));
 		foreach ($issues as &$issue){
-			$new_labels = [];
+			$new_labels = array();
 			foreach ($issue['labels'] as &$label){
 				
 				foreach ($labels_list as $label_item) {
@@ -98,15 +98,15 @@ class Github {
 	}
 
 
-	public function get_milestones($options=[]) {
+	public function get_milestones($options=array()) {
 
 		//TODO: Check for repo!
 		//$this->_check_for_repo();
 
-		$default_options = [
+		$default_options = array(
 							'state'=>'all',
 							'page' => 1
-							];
+							);
 
 		$params = array_merge($default_options, $options );
 
@@ -126,7 +126,7 @@ class Github {
 	private function _get_milestone_info($number) {
 		// $milestone = $this->client->api('issue')->milestones()->show($this->org, $this->repo, $id);
 		$paginator = new Github\ResultPager($this->client);
-		$issues = $paginator->fetchAll($this->client->api('issue'), 'all', [$this->org, $this->repo, ['milestone'=>$number, 'state'=>'all']]);
+		$issues = $paginator->fetchAll($this->client->api('issue'), 'all', array($this->org, $this->repo, array('milestone'=>$number, 'state'=>'all')));
 
 		return $issues;
 	}

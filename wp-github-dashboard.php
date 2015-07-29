@@ -54,12 +54,12 @@ function wpghdash_plugin_options() {
 			<a href="https://github.com/settings/applications/new">Register a new gitHub application...</a>
 			<p>
 			<label>GitHub Client ID:</label>
-			<input class="" type="text" name="wpghdash_client_id" value="<?php echo get_option('wpghdash_client_id'); ?>" />
+			<input class="" type="text" name="wpghdash_client_id" value="<?php //echo get_option('wpghdash_client_id'); ?>" />
 			</p>
 
 			<p>
 			<label>GitHub Client Secret:</label>
-			<input class="" type="text" name="wpghdash_client_secret" value="<?php echo get_option('wpghdash_client_secret'); ?>" />
+			<input class="" type="text" name="wpghdash_client_secret" value="<?php //echo get_option('wpghdash_client_secret'); ?>" />
 			</p> -->
 
 			<p>
