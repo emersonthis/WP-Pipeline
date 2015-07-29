@@ -1,3 +1,12 @@
+##Shortcodes
+
+`[gh_issues labels="foo,bar" state="open|closed|all"]`
+
+`[gh_milestones state="open|closed|all"]`
+
+`[gh_searchform]`
+
+
 ## Requirements
 * PHP 5.5+
 
