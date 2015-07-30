@@ -24,3 +24,12 @@
 	 	text-decoration:line-through;
 	 }
 }
+
+.issue__details__milestone {}
+.issue__details__milestone--closed { 
+	text-decoration:line-through;
+}
+
+.issue__body {
+	font-size:80%;
+}

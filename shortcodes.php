@@ -62,6 +62,7 @@ function issues_func( $atts ) {
 		'labels' => NULL,
 		'state' => NULL,
 		'per_page' => 50, #max is 100
+		'show_body' => FALSE
 	), $atts, 'gh_issues' );
 
 	$gh = new Github();
@@ -70,13 +71,11 @@ function issues_func( $atts ) {
 
 	$issues = $gh->get_issues($atts);
 
-	return format_issues($issues);
+	return format_issues($issues, $atts['show_body']);
 }
 add_shortcode( 'gh_issues', 'issues_func' );
 
-
-
-function format_issues( $issues ) {
+function format_issues( $issues, $body=false ) {
 
 	$return = '<div class="issues-list">';
 
@@ -90,12 +89,20 @@ function format_issues( $issues ) {
 		$return .= '<li>State: '.$issue['state'].'</li>';
 		$return .= (!empty($issue['closed_at'])) ? '<li>Closed: '.wpghdash_formatdate($issue['closed_at']).'</li>' : NULL;
 		$return .= (!empty($issue['assignee'])) ? '<li>Assigned to: '.$issue['assignee']['login'].'</li>' : NULL;
+		$return .= (!empty($issue['milestone'])) ? '<li><span class="issue__details__milestone '.( ($issue['milestone']['closed_at']) ? 'issue__details__milestone--closed' : NULL ).'">Milestone: '.$issue['milestone']['title'].( ($issue['milestone']['description'])? ": ".$issue['milestone']['description']: NULL ).'</span></li>' : NULL;
 		$return .= '</ul>';
+		
+		if ($body)
+			$return .= '<div class="issue__body">'.convert_text_to_markup($issue['body']).'</div>';
 	}
 
 	$return .= '</div>';
 
 	return $return;
+}
+
+function convert_text_to_markup($string){
+	return nl2br($string);
 }
 
 function build_labels( $labels ) {

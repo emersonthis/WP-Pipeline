@@ -14,4 +14,10 @@
 .milestone__issue-item.closed {
   text-decoration: line-through; }
 
+.issue__details__milestone--closed {
+  text-decoration: line-through; }
+
+.issue__body {
+  font-size: 80%; }
+
 /*# sourceMappingURL=style.css.map */

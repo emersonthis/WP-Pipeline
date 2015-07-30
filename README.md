@@ -15,7 +15,7 @@ The goals was to be as versatile as possible while still being quick and easy to
 
 ###Shortcodes
 
-`[gh_issues labels="foo,bar" state="open|closed|all"]`
+`[gh_issues labels="foo,bar,NULL" state="ALL|open|closed" show_body="FALSE|true" ]`
 
 `[gh_milestones state="open|closed|all"]`
 

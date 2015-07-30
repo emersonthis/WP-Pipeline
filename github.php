@@ -53,7 +53,7 @@ class Github {
 
 		//TODO: Add page links instead of full list
 		$issues = $paginator->fetchAll($this->client->api('issue'), 'all', array($this->org, $this->repo, $params));
-		
+		// error_log( json_encode($issues));
 		return $issues;
 	}
 
