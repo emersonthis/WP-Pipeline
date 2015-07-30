@@ -71,6 +71,11 @@ function issues_func( $atts ) {
 
 	$issues = $gh->get_issues($atts);
 
+	#load necessary scripts if we're toggling
+	if ($atts['show_body']=='toggle'){
+		wp_enqueue_script( 'toggle' );
+	}
+
 	return format_issues($issues, $atts['show_body']);
 }
 add_shortcode( 'gh_issues', 'issues_func' );
@@ -92,8 +97,12 @@ function format_issues( $issues, $body=false ) {
 		$return .= (!empty($issue['milestone'])) ? '<li><span class="issue__details__milestone '.( ($issue['milestone']['closed_at']) ? 'issue__details__milestone--closed' : NULL ).'">Milestone: '.$issue['milestone']['title'].( ($issue['milestone']['description'])? ": ".$issue['milestone']['description']: NULL ).'</span></li>' : NULL;
 		$return .= '</ul>';
 		
-		if ($body)
+		if ($body===strtolower('toggle')) {
+			$return .= '<a href="#" form-toggle-btn>Show text</a>';
 			$return .= '<div class="issue__body">'.convert_text_to_markup($issue['body']).'</div>';
+		} else if ($body){
+			$return .= '<div class="issue__body">'.convert_text_to_markup($issue['body']).'</div>';
+		}
 	}
 
 	$return .= '</div>';

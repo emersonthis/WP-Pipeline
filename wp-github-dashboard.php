@@ -115,6 +115,22 @@ function wpghdash_include_style(){
 }
 add_action( 'wp_enqueue_scripts', 'wpghdash_include_style' );
 
+
+# Here we register scripts into the footer, but we DONT enque them yet. The shortcodes will do that.
+add_action( 'wp_enqueue_scripts', 'register_wpghdash_script' );
+function register_wpghdash_script() {
+	wp_register_script( 'angular', plugins_url( '/vendor/angularjs/angular.min.js' , __FILE__ ), array(), NULL, true );
+	wp_register_script( 'module', plugins_url( '/js/module.js' , __FILE__ ), array('angular'), NULL, true );
+	wp_register_script( 'toggle', plugins_url( '/js/form-toggle-btn.js' , __FILE__ ), array('module'), NULL, true );
+}
+
+# Here we wrap the content with a div with the Angular ng-app attribute
+add_filter('the_content', 'wpghdash_wrap_ng_app');
+function wpghdash_wrap_ng_app($content) {
+        return '<div class="pipeline-wrap" ng-app="pipeline">'.$content . '</div>';
+}
+
+
 require_once 'vendor/autoload.php';
 require_once('shortcodes.php');
 require_once('github.php');
