@@ -8,6 +8,8 @@ class Github {
 	protected $org;
 	protected $repo;
 	public $labels;
+	public $has_settings = FALSE;
+	public $missing_settings_msg = '<h2>Missing GitHub settings!</h2>';
 
 	public function __construct() {
 		// $client_id = get_option('wpghdash_client_id');
@@ -17,6 +19,8 @@ class Github {
 
 		$this->repo = get_option('wpghdash_gh_repo');
 		$this->org = get_option('wpghdash_gh_org');
+
+		$this->check_for_settings();
 
 		$this->client = new \Github\Client();
 		
@@ -124,6 +128,7 @@ class Github {
 	}
 
 	private function _get_milestone_info($number) {
+		// $this->_check_for_repo();
 		// $milestone = $this->client->api('issue')->milestones()->show($this->org, $this->repo, $id);
 		$paginator = new Github\ResultPager($this->client);
 		$issues = $paginator->fetchAll($this->client->api('issue'), 'all', array($this->org, $this->repo, array('milestone'=>$number, 'state'=>'all')));
@@ -131,10 +136,15 @@ class Github {
 		return $issues;
 	}
 
-	private function _check_for_repo($error=TRUE){
-		// if(!$this->repo)
-		// 	throw_error...
+	// public function filter_repo_error_content() {
+	// 	var_dump('FFFFFFFFFFFFFFFFFFF');exit;
+	// 	return "NO REPO SETTING!!";
+	// }
 
+	public function check_for_settings($error=TRUE){
+		if ($this->repo && $this->org)
+			$this->has_settings = TRUE;
+		return $this->has_settings;
 	}
 
 }

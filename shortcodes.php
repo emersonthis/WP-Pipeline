@@ -4,8 +4,11 @@ function milestones_func( $atts ) {
 	$atts = shortcode_atts( array(
 		'state' => 'all'
 	), $atts, 'gh_milestones' );
+	
 	$gh = new Github();
-	// error_log( print_r($atts, TRUE));
+	if (!$gh->has_settings)
+		return $gh->missing_settings_msg;
+
 	$milestones = $gh->get_milestones($atts);
 
 	return format_milestones( $milestones ); 
@@ -60,32 +63,17 @@ function issues_func( $atts ) {
 		'state' => NULL,
 		'per_page' => 50, #max is 100
 	), $atts, 'gh_issues' );
+
 	$gh = new Github();
-	// error_log( print_r($atts, TRUE));
+	if (!$gh->has_settings)
+		return $gh->missing_settings_msg;
+
 	$issues = $gh->get_issues($atts);
 
 	return format_issues($issues);
 }
 add_shortcode( 'gh_issues', 'issues_func' );
 
-
-// function issues_search_func( $atts ) {
-// 	$atts = shortcode_atts( array(
-// 		'term' => NULL,
-// 		'state' => 'all'
-// 		// 'labels' => NULL,
-// 		// 'state' => NULL,
-// 		// 'per_page' => 50, #max is 100
-// 	), $atts, 'gh_issues' );
-// 	$gh = new Github();
-// 	$issues = $gh->search_issues($atts);
-
-// 	// error_log( json_encode($issues));
-
-
-// 	return format_issues($issues);
-// }
-// add_shortcode( 'gh_search', 'issues_search_func' );
 
 
 function format_issues( $issues ) {
@@ -135,6 +123,10 @@ function searchform_func( $atts ) {
 	$atts = shortcode_atts( array(
 		'placeholder' => NULL,
 	), $atts, 'gh_searchform' );
+	
+	$gh = new Github();
+	if (!$gh->has_settings)
+		return $gh->missing_settings_msg;
 
 	$results = NULL;
 	$msg = 'Enter a search term to begin.';
@@ -142,13 +134,12 @@ function searchform_func( $atts ) {
 	print_search_form();
 
 	if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
-		if (strlen( $_POST['gh_searchterm'] ) < 3) {
+		if (strlen( $_POST['gh_searchterm'] ) < 2) {
 			$msg = 'Search term is too short!';
 			$results = 0;
 
 		} else {
 
-			$gh = new Github();
 			$issues = $gh->search_issues(array('term'=>$_POST['gh_searchterm']));
 			$results = count($issues);
 			$msg = "Results: " . $results;
