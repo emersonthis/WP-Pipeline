@@ -7,37 +7,32 @@ class Github {
 	protected $client;
 	protected $org;
 	protected $repo;
+	private $gh_username;
+	private $gh_password;
 	public $labels;
 	public $has_settings = FALSE;
 	public $missing_settings_msg = '<h2>Missing GitHub settings!</h2>';
 
 	public function __construct() {
-		// $client_id = get_option('wpghdash_client_id');
-		// $client_secret = get_option('wpghdash_client_secret');
-		// error_log($client_id);
-		// error_log($client_secret);
 
 		$this->repo = get_option('wpghdash_gh_repo');
 		$this->org = get_option('wpghdash_gh_org');
+		//TODO: make it user meta from currentuser
+		//http://www.paulund.co.uk/add-custom-user-profile-fields
+		//http://davidwalsh.name/add-profile-fields
+		$this->gh_username = get_option('wpghdash_client_id');
+		$this->gh_password = get_option('wpghdash_client_secret');
 
 		$this->check_for_settings();
 
 		$this->client = new \Github\Client();
 		
-		//TODO: Don't hardcode this... make it user meta from currentuser
-		//http://www.paulund.co.uk/add-custom-user-profile-fields
-		//http://davidwalsh.name/add-profile-fields
-		//TODO: Get this working with client ID
-		$gh_username = 'TransitScreenSales';
-		$gh_password = 'QcOgOT4VJMwk';
-		$this->client->authenticate( $gh_username, $gh_password, Github\Client::AUTH_HTTP_PASSWORD);
+		$auth = $this->client->authenticate( $this->gh_username, $this->gh_password, Github\Client::AUTH_HTTP_PASSWORD);
+		// echo "<pre>";var_dump($this->client->getHttpClient());echo "</pre>";exit;
 
 	}
 
 	public function get_issues($options=array()) {
-
-		//TODO: Check for repo!
-		//$this->_check_for_repo();
 
 		$default_options = array(
 							'labels'=>'', 
@@ -104,9 +99,6 @@ class Github {
 
 	public function get_milestones($options=array()) {
 
-		//TODO: Check for repo!
-		//$this->_check_for_repo();
-
 		$default_options = array(
 							'state'=>'all',
 							'page' => 1
@@ -128,22 +120,21 @@ class Github {
 	}
 
 	private function _get_milestone_info($number) {
-		// $this->_check_for_repo();
-		// $milestone = $this->client->api('issue')->milestones()->show($this->org, $this->repo, $id);
+
 		$paginator = new Github\ResultPager($this->client);
 		$issues = $paginator->fetchAll($this->client->api('issue'), 'all', array($this->org, $this->repo, array('milestone'=>$number, 'state'=>'all')));
 
 		return $issues;
 	}
 
-	// public function filter_repo_error_content() {
-	// 	var_dump('FFFFFFFFFFFFFFFFFFF');exit;
-	// 	return "NO REPO SETTING!!";
-	// }
-
 	public function check_for_settings($error=TRUE){
-		if ($this->repo && $this->org)
+		if (	$this->repo && 
+				$this->org && 
+				$this->gh_username && 
+				$this->gh_password
+			)
 			$this->has_settings = TRUE;
+
 		return $this->has_settings;
 	}
 

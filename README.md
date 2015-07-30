@@ -26,7 +26,6 @@ The goals was to be as versatile as possible while still being quick and easy to
 This tool wraps the [PHP GitHub API](https://github.com/KnpLabs/php-github-api) by KNP Labs
 
 ## TODO:
-* Make gitHub credentials dynamic
 * Paginate results
 * Update search to use new gitHub search endpoint
 * Add assigned to search results?

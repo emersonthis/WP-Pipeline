@@ -38,7 +38,7 @@ function wpghdash_plugin_options() {
 
 	echo '<h2>GitHub Settings</h2>';
 
-	if ( $_GET['status']=='success') { 
+	if ( isset($_GET['status']) && $_GET['status']=='success') { 
 	?>
 		<div id="message" class="updated notice is-dismissible">
 			<p>Settings updated!</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
@@ -50,18 +50,8 @@ function wpghdash_plugin_options() {
 		<form method="post" action="/wp-admin/admin-post.php">
 
 			<input type="hidden" name="action" value="update_wpghdash_settings" />
-			<!-- 
-			<a href="https://github.com/settings/applications/new">Register a new gitHub application...</a>
-			<p>
-			<label>GitHub Client ID:</label>
-			<input class="" type="text" name="wpghdash_client_id" value="<?php //echo get_option('wpghdash_client_id'); ?>" />
-			</p>
 
-			<p>
-			<label>GitHub Client Secret:</label>
-			<input class="" type="text" name="wpghdash_client_secret" value="<?php //echo get_option('wpghdash_client_secret'); ?>" />
-			</p> -->
-
+			<h3>GitHub Repository Info</h3>
 			<p>
 			<label>GitHub Organization:</label>
 			<input class="" type="text" name="wpghdash_gh_org" value="<?php echo get_option('wpghdash_gh_org'); ?>" />
@@ -70,6 +60,21 @@ function wpghdash_plugin_options() {
 			<p>
 			<label>GitHub repository (slug):</label>
 			<input class="" type="text" name="wpghdash_gh_repo" value="<?php echo get_option('wpghdash_gh_repo'); ?>" />
+			</p>
+
+			<a href="https://github.com/settings/applications/new">Register a new gitHub application...</a>
+			
+
+			<!-- fields for credentials -->
+			<h3>GitHub Global User Credentials</h3>
+			Enter the credentials for the gitHub user account that Pipeline will use to interact with GitHub.
+			<p>
+			<label>GitHub Global User:</label>
+			<input class="" type="text" name="wpghdash_client_id" value="<?php echo get_option('wpghdash_client_id'); ?>" />
+			</p>
+			<p>
+			<label>GitHub Global Password:</label>
+			<input class="" type="text" name="wpghdash_client_secret" value="<?php echo get_option('wpghdash_client_secret'); ?>" />
 			</p>
 
 			<input class="button button-primary" type="submit" value="Save" />
@@ -83,13 +88,13 @@ function wpghdash_plugin_options() {
 function wpghdash_handle_request() {
 
 	#check which options were sent
-	// $client_id = (!empty($_POST['wpghdash_client_id'])) ? $_POST['wpghdash_client_id'] : NULL;
-	// $client_secret = (!empty($_POST['wpghdash_client_secret'])) ? $_POST['wpghdash_client_secret'] : NULL;
+	$client_id = (!empty($_POST['wpghdash_client_id'])) ? $_POST['wpghdash_client_id'] : NULL;
+	$client_secret = (!empty($_POST['wpghdash_client_secret'])) ? $_POST['wpghdash_client_secret'] : NULL;
 	$repo = (!empty($_POST['wpghdash_gh_repo'])) ? $_POST['wpghdash_gh_repo'] : NULL;
 	$org = (!empty($_POST['wpghdash_gh_org'])) ? $_POST['wpghdash_gh_org'] : NULL;
 
-	// update_option( 'wpghdash_client_id', $client_id, TRUE );
-	// update_option( 'wpghdash_client_secret', $client_secret, TRUE );
+	update_option( 'wpghdash_client_id', $client_id, TRUE );
+	update_option( 'wpghdash_client_secret', $client_secret, TRUE );
 	update_option( 'wpghdash_gh_repo', $repo, TRUE );
 	update_option('wpghdash_gh_org', $org, TRUE);
 
