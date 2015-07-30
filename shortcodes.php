@@ -70,15 +70,48 @@ function issues_func( $atts ) {
 		return $gh->missing_settings_msg;
 
 	$issues = $gh->get_issues($atts);
-
+	
 	#load necessary scripts if we're toggling
 	if ($atts['show_body']=='toggle'){
 		wp_enqueue_script( 'toggle' );
 	}
 
-	return format_issues($issues, $atts['show_body']);
+	$return = format_issues($issues, $atts['show_body']);
+	$return = prepend_page_count($return, $gh, count($issues) );
+	$return = append_page_links($return, $gh);
+
+	return $return;
+
 }
 add_shortcode( 'gh_issues', 'issues_func' );
+
+function prepend_page_count( $string, $Github, $on_page_count) {
+
+	$start = ($Github->per_page)*($Github->page-1)+1;
+	$end = $start+$on_page_count-1;
+	$count = "<div class='gh-result-count'>Showing: {$start} - {$end} out of X</div>";
+
+	$newstring = $count . $string;
+
+	return $newstring;
+}
+
+/* 
+ * Append previous or next page links to returned string (if appropriate)
+ * @param $string (str) the input string
+ * @param $Client (Github) an instance of the Github API class to check for pagination
+ * @return string
+ */
+function append_page_links($string, $Client) {
+	$pagination = '';
+	#add either next or prev link
+	$pagination .= ($Client->has_prev_page ) ? '<a class="gh-pagination__link gh-pagination__link--prev" href="'.get_the_permalink().'?page='.($Client->page-1).'">&larr; Previous</a>' : NULL;
+	$pagination .= ($Client->has_next_page ) ? '<a class="gh-pagination__link gh-pagination__link--next" href="'.get_the_permalink().'?page='.($Client->page+1).'">Next &rarr;</a>' : NULL;
+	# wrap either/both with div
+	$newstring = ( $pagination ) ? $string . '<div class="gh-pagination">' . $pagination . '</div>' : $string;
+
+	return $newstring;
+}
 
 function format_issues( $issues, $body=false ) {
 

@@ -12,6 +12,10 @@ class Github {
 	public $labels;
 	public $has_settings = FALSE;
 	public $missing_settings_msg = '<h2>Missing GitHub settings!</h2>';
+	public $page = 1;
+	public $has_next_page = NULL;
+	public $has_prev_page = NULL;
+	public $per_page = NULL;
 
 	public function __construct() {
 
@@ -28,7 +32,15 @@ class Github {
 		$this->client = new \Github\Client();
 		
 		$auth = $this->client->authenticate( $this->gh_username, $this->gh_password, Github\Client::AUTH_HTTP_PASSWORD);
-		// echo "<pre>";var_dump($this->client->getHttpClient());echo "</pre>";exit;
+		
+		//TODO: This should be dynamic
+		$this->per_page = 50;
+
+		#set up for paginated results
+		if ( get_query_var( 'page' ) )
+			$this->page = get_query_var( 'page' );
+
+
 
 	}
 
@@ -37,18 +49,20 @@ class Github {
 		$default_options = array(
 							'labels'=>'', 
 							'state'=>'all',
-							'page' => 1
+							'page' => $this->page
 							);
 
 		$params = array_merge($default_options, $options);
 
 		$paginator = new Github\ResultPager($this->client);
 
-		// $issues = $this->client->api('issue')->all($this->org, $this->repo, $params);
-
-		//TODO: Add page links instead of full list
-		$issues = $paginator->fetchAll($this->client->api('issue'), 'all', array($this->org, $this->repo, $params));
-		// error_log( json_encode($issues));
+		//This is how to get ALL (unpaginated)
+		// $issues = $paginator->fetchAll($this->client->api('issue'), 'all', array($this->org, $this->repo, $params));
+		$issues = $paginator->fetch($this->client->api('issue'), 'all', array($this->org, $this->repo, $params));
+		
+		$this->has_next_page = $paginator->hasNext();
+		$this->has_prev_page = $paginator->hasPrevious();
+		
 		return $issues;
 	}
 

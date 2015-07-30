@@ -47,10 +47,9 @@ pipeline.directive('formToggleBtn', [function() {
                 }
             }
 
-            event.preventDefault();
         }
                 
-        element.on('click', toggleOpen);
+        element.on('click', function(event){ toggleOpen(event);event.preventDefault(); } );
 
         //start closed
         toggleOpen();
