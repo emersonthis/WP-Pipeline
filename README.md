@@ -21,6 +21,7 @@ The goals was to be as versatile as possible while still being quick and easy to
 
 `[gh_searchform]`
 
+You can also use `[gh_searchform]` in combination with `[gh_issues]`. The issues will appear on the page until the user enters a search, then the page will display the results from the search.
 
 ## Acknowlegements.
 This tool wraps the [PHP GitHub API](https://github.com/KnpLabs/php-github-api) by KNP Labs

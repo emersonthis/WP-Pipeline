@@ -58,6 +58,11 @@ function print_milestone_issues($issues) {
 
 
 function issues_func( $atts ) {
+
+	#if a search term was entered do nothing.
+	if ( !empty($_POST['gh_searchterm']) )
+		return;
+
 	$atts = shortcode_atts( array(
 		'labels' => NULL,
 		'state' => NULL,
